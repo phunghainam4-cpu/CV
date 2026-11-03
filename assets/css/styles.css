@@ -1,0 +1,721 @@
+/* ==========================================================================
+   PORTFOLIO CV – styles.css
+   Chiến lược: MOBILE-FIRST
+   - Mặc định (ngoài media query) = giao diện cho màn hình nhỏ nhất (~360px)
+   - @media (min-width: 768px)  → nâng cấp cho tablet
+   - @media (min-width: 1280px) → nâng cấp cho desktop
+   ========================================================================== */
+
+/* ==========================================================================
+   1. DESIGN TOKENS – biến hệ thống thị giác (màu, chữ, khoảng cách, bo góc)
+   Dùng custom properties để thay đổi tập trung, nhất quán toàn trang.
+   ========================================================================== */
+:root {
+  /* --- Bảng màu công nghệ tối --- */
+  --color-primary: #38bdf8;
+  --color-primary-dark: #0ea5e9;
+  --color-accent: #8b5cf6;
+  --color-text: #e2e8f0;
+  --color-text-soft: #94a3b8;
+  --color-bg: #020817;
+  --color-surface: #0f172a;
+  --color-surface-strong: #111827;
+  --color-border: rgba(148, 163, 184, 0.2);
+  --color-chip: rgba(56, 189, 248, 0.12);
+  --color-glow: rgba(56, 189, 248, 0.38);
+
+  /* --- Typography --- */
+  --font-base: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-h2: 1.5rem;
+  --fs-h1: 2rem;
+  --lh-base: 1.6;
+
+  /* --- Khoảng cách (spacing scale) --- */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+
+  /* --- Bố cục --- */
+  --container-max: 1200px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 10px 30px rgba(14, 165, 233, 0.12), 0 0 0 1px rgba(148, 163, 184, 0.1);
+}
+
+/* ==========================================================================
+   2. CHUẨN HÓA BOX MODEL + RESET CƠ BẢN
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;   /* width đã bao gồm padding + border → dễ tính toán */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;        /* cuộn mượt khi bấm nav */
+  -webkit-text-size-adjust: 100%; /* chống iOS tự phóng chữ */
+}
+
+body {
+  font-family: var(--font-base);
+  font-size: var(--fs-base);
+  line-height: var(--lh-base);
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at top, rgba(56, 189, 248, 0.18), transparent 30%),
+    linear-gradient(180deg, #020817 0%, #0b1120 100%);
+  overflow-x: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;  /* ảnh không bao giờ tràn khung → không gây cuộn ngang */
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ==========================================================================
+   3. LAYOUT DÙNG LẠI – .container
+   ========================================================================== */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--space-2); /* lề ngang an toàn trên mobile */
+}
+
+.section {
+  padding-block: var(--space-5);
+}
+
+.section-muted {
+  background: rgba(15, 23, 42, 0.92);
+}
+
+.section-head {
+  margin-bottom: var(--space-3);
+}
+
+.section-title {
+  font-size: var(--fs-h2);
+  margin-bottom: var(--space-1);
+  position: relative;
+  display: inline-block;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 60%;
+  height: 3px;
+  margin-top: 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-primary), transparent);
+}
+
+.section-sub {
+  color: var(--color-text-soft);
+  margin-bottom: var(--space-3);
+}
+
+/* ==========================================================================
+   4. HEADER + NAV (FLEXBOX)
+   Mobile: thương hiệu trên, menu xuống dòng và tự wrap → không tràn ngang.
+   ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(2, 8, 23, 0.72);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-inner {
+  display: flex;             /* FLEXBOX */
+  flex-wrap: wrap;           /* cho phép xuống dòng trên màn hình hẹp */
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  padding-block: var(--space-1);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: 700;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.45);
+}
+
+/* Danh sách nav cũng là flex container */
+.nav-list {
+  display: flex;            /* FLEXBOX cho thanh điều hướng */
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.nav-list a {
+  display: inline-block;
+  padding: 0.25rem 0.25rem;
+  color: var(--color-text-soft);
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.nav-list a:hover,
+.nav-list a:focus-visible {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  max-width: 480px;
+}
+
+.stat-box {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 0.9rem 0.7rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.stat-box strong {
+  display: block;
+  font-size: 1.2rem;
+  color: #f8fafc;
+  margin-bottom: 0.2rem;
+}
+
+.stat-box span {
+  color: var(--color-text-soft);
+  font-size: 0.75rem;
+}
+
+.meta-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.38rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(14, 165, 233, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--color-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   5. HERO / GIỚI THIỆU
+   Mobile: xếp dọc (text trên, avatar dưới). Desktop: 2 cột.
+   ========================================================================== */
+.hero {
+  padding-block: var(--space-5);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 8, 23, 0.98));
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;     /* mobile-first: xếp dọc */
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.eyebrow {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--fs-sm);
+}
+
+.hero-title {
+  font-size: var(--fs-h1);
+  line-height: 1.15;
+  margin-block: 0.25rem;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #f8fafc 0%, var(--color-primary) 38%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-role {
+  font-size: var(--fs-lg);
+  color: #c4b5fd;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+.hero-desc {
+  color: var(--color-text-soft);
+  max-width: 60ch;
+  margin-bottom: var(--space-3);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.hero-text {
+  animation: fadeUp 0.8s ease both;
+}
+
+.hero-avatar {
+  animation: float 5s ease-in-out infinite;
+}
+
+.hero-avatar img {
+  border-radius: var(--radius);
+  width: 100%;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.1), 0 30px 60px rgba(14, 165, 233, 0.2);
+}
+
+/* --- Nút bấm --- */
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  text-align: center;
+  transition: transform 0.12s, box-shadow 0.15s, border-color 0.15s;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(56, 189, 248, 0.3);
+}
+.btn-primary:hover {
+  box-shadow: 0 16px 32px rgba(139, 92, 246, 0.22);
+}
+
+.btn-outline {
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: var(--color-primary);
+  background: rgba(15, 23, 42, 0.4);
+}
+.btn-outline:hover {
+  background: rgba(56, 189, 248, 0.08);
+}
+
+/* ==========================================================================
+   6. KỸ NĂNG – chip tự wrap bằng flex
+   ========================================================================== */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+.glass-card,
+.info-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  box-shadow: var(--shadow);
+}
+
+.info-card h3 {
+  margin-bottom: 0.8rem;
+  color: #f8fafc;
+}
+
+.info-card p,
+.info-list {
+  color: var(--color-text-soft);
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.info-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  padding-bottom: 0.5rem;
+}
+
+.info-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.skill-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.skill-chip {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(139, 92, 246, 0.08));
+  color: #dbeafe;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.skill-chip:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.12);
+}
+
+/* ==========================================================================
+   7. DỰ ÁN – CSS GRID cho danh sách thẻ
+   Mobile: 1 cột. Tablet: 2 cột. Desktop: 3 cột.
+   ========================================================================== */
+.timeline {
+  position: relative;
+  display: grid;
+  gap: 1.25rem;
+  max-width: 760px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(56, 189, 248, 0.4), rgba(139, 92, 246, 0.2));
+}
+
+.timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  border: 3px solid rgba(2, 8, 23, 0.9);
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
+  margin-top: 0.35rem;
+  z-index: 1;
+}
+
+.timeline-content {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.1rem;
+}
+
+.timeline-content h3 {
+  margin-bottom: 0.35rem;
+  color: #f8fafc;
+}
+
+.timeline-content p {
+  color: var(--color-text-soft);
+}
+
+.project-grid {
+  display: grid;                       /* CSS GRID */
+  grid-template-columns: 1fr;          /* mobile-first: 1 cột */
+  gap: var(--space-3);
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.8));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  animation: fadeUp 0.8s ease both;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 18px 42px rgba(56, 189, 248, 0.15);
+}
+
+.card-media {
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.card:hover .card-media {
+  transform: scale(1.04);
+  filter: saturate(1.2) contrast(1.05);
+}
+
+.card-media {
+  width: 100%;
+  aspect-ratio: 5 / 3;                 /* giữ tỉ lệ ảnh ổn định */
+  object-fit: cover;
+}
+
+.card-body {
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;                             /* các thẻ cao bằng nhau trong grid */
+}
+
+.card-title {
+  font-size: var(--fs-lg);
+  color: #f8fafc;
+}
+
+.card-desc {
+  color: var(--color-text-soft);
+  font-size: var(--fs-sm);
+  flex: 1;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag-list li {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
+.card-link {
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  margin-top: var(--space-1);
+}
+
+/* ==========================================================================
+   8. LIÊN HỆ
+   ========================================================================== */
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  max-width: 760px;
+  animation: fadeUp 0.9s ease both;
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.08);
+}
+
+.contact-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: baseline;
+  padding-block: 0.25rem;
+}
+
+.contact-label {
+  min-width: 90px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.contact-list a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.contact-list a:hover { text-decoration: underline; }
+
+/* ==========================================================================
+   9. FOOTER
+   ========================================================================== */
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  background: rgba(2, 8, 23, 0.9);
+  padding-block: var(--space-3);
+}
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-text-soft);
+  font-size: var(--fs-sm);
+}
+
+.to-top {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(56, 189, 248, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(56, 189, 248, 0.2);
+  }
+}
+
+.hero-avatar img {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.nav-list a,
+.btn,
+.card,
+.skill-chip,
+.contact-list a {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+/* ==========================================================================
+   10. MEDIA QUERIES – nâng cấp theo breakpoint (mobile-first)
+   ========================================================================== */
+
+/* ----- TABLET: ≥ 768px ----- */
+@media (min-width: 768px) {
+  :root {
+    --fs-h1: 2.5rem;   /* 40px */
+    --fs-h2: 1.75rem;  /* 28px */
+  }
+
+  .container { padding-inline: var(--space-3); }
+
+  .about-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Hero chuyển sang 2 cột */
+  .hero-inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .hero-text { flex: 1; }
+  .hero-avatar img { max-width: 300px; }
+
+  /* Lưới dự án: 2 cột */
+  .project-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ----- DESKTOP: ≥ 1280px ----- */
+@media (min-width: 1280px) {
+  :root {
+    --fs-h1: 3rem;     /* 48px */
+  }
+
+  /* Lưới dự án: 3 cột */
+  .project-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .hero-avatar img { max-width: 340px; }
+}
+
+/* ==========================================================================
+   11. HỖ TRỢ TIẾP CẬN & ƯA THÍCH NGƯỜI DÙNG
+   ========================================================================== */
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
